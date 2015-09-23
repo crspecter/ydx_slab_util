@@ -1,6 +1,6 @@
 CC:=g++
-CFLAGS:=-Wall -O2 -fPIC -shared -Wno-deprecated -D__STDC_LIMIT_MACROS -std=c++11 -fno-strict-aliasing -msse4
-#CFLAGS:=-Wall -g -fPIC -shared -Wno-deprecated -D__STDC_LIMIT_MACROS -std=gnu++0x -fno-strict-aliasing -msse4 
+CFLAGS:=-Wall -O2 -shared -fPIC  -Wno-deprecated -D__STDC_LIMIT_MACROS -std=c++11 -fno-strict-aliasing -msse4
+#CFLAGS:=-Wall -g -shared -fPIC  -Wno-deprecated -D__STDC_LIMIT_MACROS -std=gnu++0x -fno-strict-aliasing -msse4 
 DIRS=.
 SRC:=$(foreach dir, $(DIRS), $(wildcard $(dir)/*.cpp))
 OBJ:=$(SRC:.cpp=.o)

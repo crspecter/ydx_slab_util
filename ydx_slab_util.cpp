@@ -93,10 +93,7 @@ int Slab::do_slabs_newslab(const unsigned int id)
 	slabclass_t *p = &slabclass_[id];
 	unsigned int size = p->size * p->node_cnt; //求出一个数组成员中内存块需要的总长度
 	char *ptr;
-	if(mem_malloced_  + size > block_memory)
-	{
-		return 0;
-	}
+
 	
 	if((ptr = (char*)memory_allocate((size_t)size)) == 0)
 	{
@@ -129,6 +126,7 @@ void *Slab::memory_allocate(size_t size)
 	//此处是memcached不具备的功能
 	else
 	{
+		
 		mem_alloc_node *mem_node = (mem_alloc_node*)malloc(sizeof(*mem_alloc_));
 		mem_node->mem_base = malloc(block_memory);//一次分配32M内存
 		if(NULL == mem_alloc_->mem_base)
@@ -136,14 +134,17 @@ void *Slab::memory_allocate(size_t size)
 			LOG_ERROR << "Slab init failed";
 			return NULL;
 		}
+
 		//加入链表
 		if(mem_alloc_ != NULL)
 		{
 			mem_alloc_->prev = mem_node;
 			mem_node->next = mem_alloc_;
 			mem_node->prev = NULL;
-			mem_alloc_ = mem_node;
+			
 		}
+		
+		mem_alloc_ = mem_node;
 		++mem_alloc_size_;
 	
 		mem_base_ = mem_alloc_->mem_base;
@@ -151,7 +152,8 @@ void *Slab::memory_allocate(size_t size)
 		mem_avail_	= block_memory;	
 		ret = mem_current_;
 		mem_current_ = ((char*)mem_current_) + size;
-		mem_avail_ -= size;
+		mem_avail_ -= size;  //reset avail
+		mem_malloced_ = size;//reset malloced_
 	}
 	return ret;
 }
